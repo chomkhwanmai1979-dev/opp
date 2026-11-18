@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบทดสอบความเข้าใจ ม.2 - Quiz Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
+        .custom-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-indigo-50/30 to-blue-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3.5 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-800 leading-tight">QuizHub M.2</h1>
+                    <p class="text-xs text-slate-500">ระบบประเมินความรู้หลังเรียน ม.2</p>
+                </div>
+            </div>
+            <div id="user-display" class="hidden sm:flex items-center space-x-2 bg-indigo-50 px-3.5 py-1.5 rounded-full text-indigo-700 font-medium text-sm">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span id="nav-student-name">นักเรียน</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow flex flex-col justify-center">
+
+        <!-- Screen 1: Welcome & Name Input -->
+        <div id="screen-welcome" class="bg-white rounded-3xl p-8 sm:p-12 custom-shadow border border-slate-100 text-center max-w-xl mx-auto w-full transition-all duration-300">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-6 shadow-inner">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">ยินดีต้อนรับสู่แบบทดสอบความเข้าใจ</h2>
+            <p class="text-slate-500 mb-8 text-sm sm:text-base">ระดับชั้นมัธยมศึกษาปีที่ 2 5 รายวิชาสำคัญ เตรียมตัวให้พร้อมแล้วลุยกันเลย!</p>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">ชื่อ - นามสกุล หรือชื่อเล่นของคุณ</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="student-name-input" placeholder="เช่น ด.ช. รักเรียน เพียรศึกษา" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all text-sm">
+                    </div>
+                </div>
+                <button onclick="startApp()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-200 hover:from-indigo-700 hover:to-violet-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2">
+                    <span>เข้าสู่หน้าเลือกวิชา</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Subject Dashboard -->
+        <div id="screen-dashboard" class="hidden space-y-6">
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">ระดับชั้น ม.2</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold mt-2" id="welcome-banner-text">สวัสดีครับ/ค่ะ</h2>
+                    <p class="text-indigo-100 text-sm mt-1">เลือกวิชาที่คุณต้องการทดสอบความเข้าใจหลังเรียนได้เลยครับ</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/20 text-center">
+                    <p class="text-xs text-indigo-200">วิชาที่ทำแบบทดสอบแล้ว</p>
+                    <p class="text-2xl font-bold"><span id="completed-count">0</span> / 5</p>
+                </div>
+            </div>
+
+            <h3 class="font-bold text-lg text-slate-800 px-1">รายวิชาทั้งหมด (5 วิชา)</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="subject-cards-container">
+                <!-- Subject Cards injected via JS -->
+            </div>
+        </div>
+
+        <!-- Screen 3: Quiz Screen -->
+        <div id="screen-quiz" class="hidden bg-white rounded-3xl p-6 sm:p-10 custom-shadow border border-slate-100 max-w-2xl mx-auto w-full">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+                <div class="flex items-center space-x-3">
+                    <div id="quiz-subject-icon" class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-lg"></div>
+                    <div>
+                        <h3 id="quiz-subject-title" class="font-bold text-slate-800 text-base">ชื่อวิชา</h3>
+                        <p class="text-xs text-slate-400">คำถามข้อที่ <span id="current-q-num">1</span> จาก <span id="total-q-num">5</span></p>
+                    </div>
+                </div>
+                <button onclick="confirmExitQuiz()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-50 transition-all text-sm font-medium flex items-center space-x-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                    <span class="hidden sm:inline">ออก</span>
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 h-2 rounded-full mb-8 overflow-hidden">
+                <div id="quiz-progress-bar" class="bg-indigo-600 h-full transition-all duration-300 rounded-full" style="width: 20%;"></div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6">
+                <h4 id="question-text" class="text-lg sm:text-xl font-semibold text-slate-800 leading-relaxed">คำถามจะแสดงที่นี่...</h4>
+            </div>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 mb-8">
+                <!-- Options injected via JS -->
+            </div>
+
+            <!-- Navigation Button inside Quiz -->
+            <div class="flex justify-end">
+                <button id="next-btn" onclick="handleNextQuestion()" disabled class="px-6 py-3 bg-slate-200 text-slate-400 font-semibold rounded-xl transition-all duration-200 flex items-center space-x-2 cursor-not-allowed">
+                    <span id="next-btn-text">เลือกคำตอบก่อน</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Result Screen -->
+        <div id="screen-result" class="hidden bg-white rounded-3xl p-6 sm:p-10 custom-shadow border border-slate-100 max-w-xl mx-auto w-full text-center">
+            <div id="result-icon-container" class="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-6 shadow-md">
+                <!-- Icon via JS -->
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-1">สรุปผลการทดสอบ</h3>
+            <p id="result-subject-name" class="text-indigo-600 font-medium mb-6">รายวิชา...</p>
+
+            <div class="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100">
+                <p class="text-sm text-slate-500 mb-1">คะแนนที่คุณทำได้</p>
+                <div class="text-4xl font-bold text-slate-800 mb-2">
+                    <span id="final-score" class="text-indigo-600">0</span> / <span id="final-total">5</span>
+                </div>
+                <p id="result-message" class="text-sm text-slate-600 font-medium">เก่งมากครับ คุณมีความเข้าใจในระดับดี</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="reviewAnswers()" class="px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>ดูเฉลยคำตอบ</span>
+                </button>
+                <button onclick="backToDashboard()" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-house"></i>
+                    <span>กลับหน้าหลักวิชา</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Review Answers Screen -->
+        <div id="screen-review" class="hidden bg-white rounded-3xl p-6 sm:p-8 custom-shadow border border-slate-100 max-w-2xl mx-auto w-full">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800 text-lg flex items-center space-x-2">
+                    <i class="fa-solid fa-clipboard-question text-indigo-600"></i>
+                    <span>เฉลยคำตอบและคำอธิบาย</span>
+                </h3>
+                <button onclick="backToResult()" class="text-slate-500 hover:text-slate-700 text-sm font-medium flex items-center space-x-1">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>กลับหน้าสรุปผล</span>
+                </button>
+            </div>
+            <div id="review-list-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+                <!-- Review items injected via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Message Modal (No alert() used) -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 text-center animate-in fade-in zoom-in duration-200">
+            <div id="modal-icon" class="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-xl mb-4"></div>
+            <h4 id="modal-title" class="font-bold text-slate-800 text-lg mb-1">แจ้งเตือน</h4>
+            <p id="modal-message" class="text-slate-500 text-sm mb-6">ข้อความแจ้งเตือน...</p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all">ตกลง</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-100 mt-8">
+        <p>QuizHub M.2 - ระบบประเมินความเข้าใจหลังการเรียน มัธยมศึกษาปีที่ 2</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Database of Questions for M.2 Students across 5 subjects
+        const subjectsData = {
+            math: {
+                id: 'math',
+                name: 'คณิตศาสตร์ ม.2',
+                icon: 'fa-solid fa-calculator',
+                color: 'from-blue-500 to-cyan-500',
+                bgColor: 'bg-blue-50',
+                textColor: 'text-blue-600',
+                borderColor: 'border-blue-100',
+                questions: [
+                    {
+                        q: "ค่าของเลขยกกำลัง 2³ × 2⁴ ตรงกับข้อใด?",
+                        options: ["2⁷", "2¹²", "4⁷", "4¹²"],
+                        answer: 0,
+                        explanation: "ตามสมบัติของเลขยกกำลัง aᵐ × aⁿ = aᵐ⁺ⁿ ดังนั้น 2³ × 2⁴ = 2³⁺⁴ = 2⁷"
+                    },
+                    {
+                        q: "ผลลัพธ์ของพหุนาม (3x + 2) + (5x - 4) คือข้อใด?",
+                        options: ["8x + 2", "8x - 2", "15x - 8", "2x - 6"],
+                        answer: 1,
+                        explanation: "นำพจน์ที่คล้ายกันมารวมกัน: (3x + 5x) + (2 - 4) = 8x - 2"
+                    },
+                    {
+                        q: "ทรงกระบอกมีรัศมีฐาน 7 เซนติเมตร และสูง 10 เซนติเมตร (กำหนด π ≈ 22/7) พื้นที่ผิวข้างประมาณเท่าใด?",
+                        options: ["220 ตร.ซม.", "440 ตร.ซม.", "1,540 ตร.ซม.", "308 ตร.ซม."],
+                        answer: 1,
+                        explanation: "สูตรพื้นที่ผิวข้างทรงกระบอก = 2πrh = 2 × (22/7) × 7 × 10 = 440 ตารางเซนติเมตร"
+                    },
+                    {
+                        q: "มัธยฐาน (Median) ของชุดข้อมูล 12, 15, 9, 20, 18 คือข้อใด?",
+                        options: ["12", "15", "18", "20"],
+                        answer: 1,
+                        explanation: "เรียงข้อมูลจากน้อยไปมาก: 9, 12, 15, 18, 20 ค่าที่อยู่ตรงกลางคือ 15"
+                    },
+                    {
+                        q: "ถ้า x - 5 = 12 ค่าของ x ตรงกับข้อใด?",
+                        options: ["7", "12", "17", "-17"],
+                        answer: 2,
+                        explanation: "ย้ายข้างสมการ: x = 12 + 5 = 17"
+                    }
+                ]
+            },
+            physics: {
+                id: 'physics',
+                name: 'ฟิสิกส์ (วิทยาศาสตร์ ม.2)',
+                icon: 'fa-solid fa-atom',
+                color: 'from-purple-500 to-indigo-500',
+                bgColor: 'bg-purple-50',
+                textColor: 'text-purple-600',
+                borderColor: 'border-purple-100',
+                questions: [
+                    {
+                        q: "แรงลัพธ์ที่กระทำต่อวัตถุดึงไปทางขวา 12 นิวตัน และไปทางซ้าย 5 นิวตัน จะมีขนาดและทิศทางอย่างไร?",
+                        options: ["7 นิวตัน ไปทางขวา", "7 นิวตัน ไปทางซ้าย", "17 นิวตัน ไปทางขวา", "17 นิวตัน ไปทางซ้าย"],
+                        answer: 0,
+                        explanation: "แรงมีทิศทางตรงข้ามกันให้นำมาลบกัน (12 - 5 = 7 นิวตัน) และมีทิศไปตามแรงที่มากกว่าคือทางขวา"
+                    },
+                    {
+                        q: "งาน (Work) ในทางฟิสิกส์จะเกิดขึ้นเมื่อใด?",
+                        options: ["เมื่อออกแรงดันกำแพงแล้วกำแพงไม่ขยับ", "เมื่อยกวัตถุถือไว้เฉยๆ นิ่งๆ", "เมื่อมีแรงมากระทำแล้วทำให้วัตถุเคลื่อนที่ไปตามแนวแรง", "เมื่อวัตถุเคลื่อนที่โดยไม่มีแรงมากระทำเลย"],
+                        answer: 2,
+                        explanation: "งานจะเกิดขึ้นเมื่อมีแรงมากระทำต่อวัตถุและวัตถุเคลื่อนที่ตามแนวแรง (W = F × s)"
+                    },
+                    {
+                        q: "พลังงานจลน์ (Kinetic Energy) ของวัตถุขึ้นอยู่กับปัจจัยใดบ้าง?",
+                        options: ["มวลและความสูงของวัตถุ", "มวลและความเร็วของวัตถุ", "น้ำหนักและความเร่งโน้มถ่วง", "ความหนาแน่นและปริมาตร"],
+                        answer: 1,
+                        explanation: "สูตรพลังงานจลน์ Ek = ½mv² โดย m คือมวล และ v คือความเร็ว"
+                    },
+                    {
+                        q: "ปัจจัยใดที่มีผลต่อความดันในของเหลว ณ จุดใดๆ มากที่สุด?",
+                        options: ["สีของภาชนะบรรจุ", "ความลึกและระดับความหนาแน่นของของเหลว", "ปริมาตรทั้งหมดของของเหลว", "อุณหภูมิห้องรอบภาชนะ"],
+                        answer: 1,
+                        explanation: "ความดันในของเหลว (P = ρgh) ขึ้นอยู่กับความลึกและความหนาแน่นของของเหลว"
+                    },
+                    {
+                        q: "หน่วยในระบบเอสไอ (SI) ของ 'กำลัง (Power)' คือข้อใด?",
+                        options: ["จูล (Joule)", "นิวตัน (Newton)", "วัตต์ (Watt)", "ปาสคาล (Pascal)"],
+                        answer: 2,
+                        explanation: "กำลังมีหน่วยเป็น วัตต์ (Watt หรือ J/s)"
+                    }
+                ]
+            },
+            biology: {
+                id: 'biology',
+                name: 'ชีววิทยา (วิทยาศาสตร์ ม.2)',
+                icon: 'fa-solid fa-dna',
+                color: 'from-emerald-500 to-teal-500',
+                bgColor: 'bg-emerald-50',
+                textColor: 'text-emerald-600',
+                borderColor: 'border-emerald-100',
+                questions: [
+                    {
+                        q: "ออร์แกเนลล์ใดภายในเซลล์ทำหน้าที่สร้างพลังงาน (ATP) ให้แก่เซลล์?",
+                        options: ["ไรโบโซม (Ribosome)", "คลอโรพลาสต์ (Chloroplast)", "ไมโทคอนเดรีย (Mitochondria)", "แวคิวโอล (Vacuole)"],
+                        answer: 2,
+                        explanation: "ไมโทคอนเดรีย (Mitochondria) ทำหน้าที่หายใจระดับเซลล์เพื่อสร้างพลังงาน (ATP)"
+                    },
+                    {
+                        q: "หลอดเลือดใดทำหน้าที่นำเลือดที่มีปริมาณออกซิเจนสูงจากปอดกลับเข้าสู่หัวใจห้องบนซ้าย?",
+                        options: ["Pulmonary Artery", "Pulmonary Vein", "Aorta", "Vena Cava"],
+                        answer: 1,
+                        explanation: "หลอดเลือดพัลมอนารีเวน (Pulmonary Vein) เป็นหลอดเลือดเวนเส้นเดียวที่นำเลือดดีจากปอดเข้าสู่หัวใจ"
+                    },
+                    {
+                        q: "กระบวนการแลกเปลี่ยนแก๊สออกซิเจนและคาร์บอนไดออกไซด์ในมนุษย์เกิดขึ้นบริเวณใด?",
+                        options: ["หลอดลม (Trachea)", "ขั้วปอด (Bronchus)", "ถุงลมปอด (Alveoli)", "กล่องเสียง (Larynx)"],
+                        answer: 2,
+                        explanation: "การแลกเปลี่ยนแก๊สเกิดขึ้นโดยการแพร่บริเวณถุงลมปอดที่มีหลอดเลือดฝอยล้อมรอบ"
+                    },
+                    {
+                        q: "โครงสร้างใดในพืชที่ทำหน้าที่ลำเลียงน้ำและแร่ธาตุจากรากขึ้นไปสู่ส่วนต่างๆ?",
+                        options: ["Xylem (ไซเล็ม)", "Phloem (โฟลเอ็ม)", "Stomata (ปากใบ)", "Cortex (คอร์เทกซ์)"],
+                        answer: 0,
+                        explanation: "Xylem (ไซเล็ม) ทำหน้าที่ลำเลียงน้ำและแร่ธาตุ ส่วน Phloem ลำเลียงอาหาร"
+                    },
+                    {
+                        q: "อวัยวะใดในระบบย่อยอาหารของมนุษย์ที่เป็นบริเวณที่มีการย่อยและดูดซึมสารอาหารมากที่สุด?",
+                        options: ["กระเพาะอาหาร (Stomach)", "ลำไส้ใหญ่ (Large Intestine)", "ลำไส้เล็ก (Small Intestine)", "ตับอ่อน (Pancreas)"],
+                        answer: 2,
+                        explanation: "ลำไส้เล็กเป็นอวัยวะสำคัญที่มีการย่อยอาหารทุกประเภทและดูดซึมสารอาหารเข้าสู่กระแสเลือดมากที่สุด"
+                    }
+                ]
+            },
+            english: {
+                id: 'english',
+                name: 'ภาษาอังกฤษ ม.2',
+                icon: 'fa-solid fa-language',
+                color: 'from-amber-500 to-orange-500',
+                bgColor: 'bg-amber-50',
+                textColor: 'text-amber-600',
+                borderColor: 'border-amber-100',
+                questions: [
+                    {
+                        q: "Choose the correct tense: 'While I _______ (study) in my room, my friend called me.'",
+                        options: ["study", "studied", "was studying", "is studying"],
+                        answer: 2,
+                        explanation: "Past Continuous Tense (was/were + V.ing) ใช้สำหรับเหตุการณ์กำลังเกิดขึ้นในอดีตแล้วมีอีกเหตุการณ์แทรกเข้ามา"
+                    },
+                    {
+                        q: "What is the comparative form of the adjective 'good'?",
+                        options: ["gooder", "better", "best", "more good"],
+                        answer: 1,
+                        explanation: "คำคุณศัพท์เปรียบเทียบขั้นกว่า (Comparative) ของ good คือ better ส่วนขั้นสุดคือ best"
+                    },
+                    {
+                        q: "Fill in the blank: 'Mount Everest is the _______ mountain in the world.'",
+                        options: ["high", "higher", "highest", "most high"],
+                        answer: 2,
+                        explanation: "เป็นการเปรียบเทียบขั้นสูงสุด (Superlative) นำหน้าด้วย the และเติม -est สำหรับคำพยางค์เดียว จึงเป็น the highest"
+                    },
+                    {
+                        q: "What does the idiom 'A piece of cake' mean?",
+                        options: ["ขนมเค้กอร่อยมาก", "เรื่องที่ง่ายมากๆ", "งานเลี้ยงวันเกิด", "ของขวัญวันเกิด"],
+                        answer: 1,
+                        explanation: "'A piece of cake' เป็นสำนวนหมายถึง เรื่องง่ายๆ สบายมาก"
+                    },
+                    {
+                        q: "Choose the correct sentence in Future Simple Tense:",
+                        options: ["I go to Chiang Mai tomorrow.", "I went to Chiang Mai yesterday.", "I will go to Chiang Mai tomorrow.", "I am going to Chiang Mai last week."],
+                        answer: 2,
+                        explanation: "Future Simple Tense ใช้โครงสร้าง Subject + will + V.1 และมีคำบอกเวลาในอนาคตคือ tomorrow"
+                    }
+                ]
+            },
+            coding: {
+                id: 'coding',
+                name: 'วิทยาการคำนวณ (Coding)',
+                icon: 'fa-solid fa-code',
+                color: 'from-rose-500 to-pink-500',
+                bgColor: 'bg-rose-50',
+                textColor: 'text-rose-600',
+                borderColor: 'border-rose-100',
+                questions: [
+                    {
+                        q: "ในภาษา Python คำสั่งใดใช้สำหรับแสดงผลข้อความออกทางหน้าจอ?",
+                        options: ["input()", "print()", "output()", "scan()"],
+                        answer: 1,
+                        explanation: "คำสั่ง print() ใช้สำหรับแสดงผลข้อมูลหรือข้อความออกทางหน้าจอใน Python"
+                    },
+                    {
+                        q: "โครงสร้างควบคุมแบบวนซ้ำ (Loop) ในข้อใดเหมาะสมที่สุดเมื่อรู้จำนวนรอบที่แน่นอน?",
+                        options: ["if-else statement", "while loop", "for loop", "switch-case"],
+                        answer: 2,
+                        explanation: "for loop นิยมใช้เมื่อเราทราบจำนวนรอบการทำงานที่แน่นอนล่วงหน้า"
+                    },
+                    {
+                        q: "ผลลัพธ์ของเงื่อนไขใน Python: x = 10; print(x > 5 and x < 15) คืออะไร?",
+                        options: ["True", "False", "Error", "None"],
+                        answer: 0,
+                        explanation: "x มีค่า 10 ซึ่งมากกว่า 5 (True) และน้อยกว่า 15 (True) เมื่อเชื่อมด้วย and จึงได้ผลลัพธ์เป็น True"
+                    },
+                    {
+                        q: "แท็ก HTML ข้อใดใช้สำหรับสร้างลิงก์เชื่อมโยงไปยังเว็บไซต์อื่น?",
+                        options: ["<p>", "<img>", "<a>", "<div>"],
+                        answer: 2,
+                        explanation: "แท็ก <a> (Anchor) ใช้สำหรับสร้าง Hyperlink เชื่อมโยงหน้าเว็บ"
+                    },
+                    {
+                        q: "ข้อใดคือความหมายที่ถูกต้องที่สุดของคำว่า 'Algorithm' (อัลกอริทึม)?",
+                        options: ["ภาษาคอมพิวเตอร์ที่ใช้เขียนโปรแกรม", "ขั้นตอนวิธีหรือลำดับขั้นตอนการแก้ปัญหาอย่างเป็นระบบ", "ข้อผิดพลาดที่เกิดขึ้นในโปรแกรม", "อุปกรณ์จัดเก็บข้อมูลสำรอง"],
+                        answer: 1,
+                        explanation: "Algorithm คือกระบวนการหรือลำดับขั้นตอนวิธีในการแก้ปัญหาหรือทำงานอย่างเป็นขั้นเป็นตอน"
+                    }
+                ]
+            }
+        };
+
+        // Application State
+        let currentStudent = "";
+        let activeSubjectId = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let scores = JSON.parse(localStorage.getItem('quizhub_scores_m2')) || {};
+
+        // DOM Elements
+        const screenWelcome = document.getElementById('screen-welcome');
+        const screenDashboard = document.getElementById('screen-dashboard');
+        const screenQuiz = document.getElementById('screen-quiz');
+        const screenResult = document.getElementById('screen-result');
+        const screenReview = document.getElementById('screen-review');
+
+        // Initialize App on load
+        window.onload = function() {
+            const savedName = localStorage.getItem('quizhub_student_name');
+            if (savedName) {
+                document.getElementById('student-name-input').value = savedName;
+            }
+        };
+
+        function showModal(title, message, type = 'info') {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalIcon = document.getElementById('modal-icon');
+
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+
+            if (type === 'error') {
+                modalIcon.className = "w-12 h-12 rounded-full mx-auto flex items-center justify-center text-xl mb-4 bg-rose-100 text-rose-600";
+                modalIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            } else {
+                modalIcon.className = "w-12 h-12 rounded-full mx-auto flex items-center justify-center text-xl mb-4 bg-indigo-100 text-indigo-600";
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function startApp() {
+            const nameInput = document.getElementById('student-name-input').value.trim();
+            if (!nameInput) {
+                showModal("กรุณากรอกชื่อ", "โปรดระบุชื่อหรือชื่อเล่นของคุณก่อนเข้าสู่ระบบครับ", "error");
+                return;
+            }
+            currentStudent = nameInput;
+            localStorage.setItem('quizhub_student_name', currentStudent);
+            
+            document.getElementById('nav-student-name').innerText = currentStudent;
+            document.getElementById('user-display').classList.remove('hidden');
+
+            switchScreen(screenDashboard);
+            renderDashboard();
+        }
+
+        function goToHome() {
+            if (activeSubjectId) {
+                confirmExitQuiz();
+            } else if (currentStudent) {
+                switchScreen(screenDashboard);
+                renderDashboard();
+            } else {
+                switchScreen(screenWelcome);
+            }
+        }
+
+        function switchScreen(targetScreen) {
+            [screenWelcome, screenDashboard, screenQuiz, screenResult, screenReview].forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            targetScreen.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDashboard() {
+            document.getElementById('welcome-banner-text').innerText = `ยินดีต้อนรับ, คุณ${currentStudent}`;
+            
+            let completed = 0;
+            const container = document.getElementById('subject-cards-container');
+            container.innerHTML = "";
+
+            Object.keys(subjectsData).forEach(key => {
+                const sub = subjectsData[key];
+                const scoreData = scores[key];
+                const isCompleted = scoreData !== undefined;
+                if (isCompleted) completed++;
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl p-6 border ${sub.borderColor} custom-shadow hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
+                
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${sub.color} opacity-5 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110"></div>
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${sub.color} text-white flex items-center justify-center text-xl shadow-md">
+                                <i class="${sub.icon}"></i>
+                            </div>
+                            ${isCompleted ? 
+                                `<span class="bg-emerald-100 text-emerald-700 font-semibold text-xs px-3 py-1 rounded-full flex items-center space-x-1">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>ทำแล้ว (${scoreData.score}/${scoreData.total})</span>
+                                </span>` : 
+                                `<span class="bg-slate-100 text-slate-500 font-medium text-xs px-2.5 py-1 rounded-full">ยังไม่ทำ</span>`
+                            }
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-lg mb-1">${sub.name}</h4>
+                        <p class="text-xs text-slate-500 mb-6">แบบทดสอบ 5 ข้อ วัดความเข้าใจเนื้อหา ม.2</p>
+                    </div>
+                    <button onclick="startQuiz('${key}')" class="w-full py-2.5 ${sub.bgColor} ${sub.textColor} font-semibold rounded-xl hover:opacity-90 transition-all flex items-center justify-center space-x-2 text-sm">
+                        <span>${isCompleted ? 'ทำแบบทดสอบอีกครั้ง' : 'เริ่มทำแบบทดสอบ'}</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('completed-count').innerText = completed;
+        }
+
+        function startQuiz(subjectKey) {
+            activeSubjectId = subjectKey;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            loadQuestion();
+            switchScreen(screenQuiz);
+        }
+
+        function loadQuestion() {
+            const sub = subjectsData[activeSubjectId];
+            const qObj = sub.questions[currentQuestionIndex];
+
+            document.getElementById('quiz-subject-title').innerText = sub.name;
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('total-q-num').innerText = sub.questions.length;
+            
+            // Icon styling
+            const iconContainer = document.getElementById('quiz-subject-icon');
+            iconContainer.className = `w-10 h-10 rounded-xl bg-gradient-to-tr ${sub.color} flex items-center justify-center text-white text-lg shadow-sm`;
+            iconContainer.innerHTML = `<i class="${sub.icon}"></i>`;
+
+            // Progress bar
+            const progressPercent = ((currentQuestionIndex + 1) / sub.questions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = progressPercent + '%';
+
+            // Question text
+            document.getElementById('question-text').innerText = qObj.q;
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            qObj.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 transition-all font-medium text-slate-700 flex items-center space-x-3 group`;
+                
+                const isSelected = userAnswers[currentQuestionIndex] === idx;
+                if (isSelected) {
+                    btn.className = `w-full text-left p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50 transition-all font-medium text-indigo-900 flex items-center space-x-3`;
+                }
+
+                btn.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg border border-slate-300 group-hover:border-indigo-500 group-hover:bg-indigo-100 flex items-center justify-center text-xs text-slate-500 font-semibold ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : ''}">
+                        ${String.fromCharCode(65 + idx)}
+                    </div>
+                    <span class="flex-grow">${opt}</span>
+                `;
+
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            updateNextButtonState();
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            loadQuestion(); // Re-render to show selected style
+        }
+
+        function updateNextButtonState() {
+            const nextBtn = document.getElementById('next-btn');
+            const nextBtnText = document.getElementById('next-btn-text');
+            const sub = subjectsData[activeSubjectId];
+
+            if (userAnswers[currentQuestionIndex] !== undefined) {
+                nextBtn.disabled = false;
+                nextBtn.className = "px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center space-x-2 cursor-pointer";
+                nextBtnText.innerText = (currentQuestionIndex === sub.questions.length - 1) ? "ส่งคำตอบ" : "ข้อถัดไป";
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.className = "px-6 py-3 bg-slate-200 text-slate-400 font-semibold rounded-xl transition-all flex items-center space-x-2 cursor-not-allowed";
+                nextBtnText.innerText = "เลือกคำตอบก่อน";
+            }
+        }
+
+        function handleNextQuestion() {
+            const sub = subjectsData[activeSubjectId];
+            if (currentQuestionIndex < sub.questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            const sub = subjectsData[activeSubjectId];
+            let score = 0;
+            sub.questions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.answer) {
+                    score++;
+                }
+            });
+
+            // Save score
+            scores[activeSubjectId] = {
+                score: score,
+                total: sub.questions.length,
+                answers: [...userAnswers]
+            };
+            localStorage.setItem('quizhub_scores_m2', JSON.stringify(scores));
+
+            // Render Result Screen
+            document.getElementById('result-subject-name').innerText = sub.name;
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-total').innerText = sub.questions.length;
+
+            const resIcon = document.getElementById('result-icon-container');
+            const resMsg = document.getElementById('result-message');
+
+            if (score === sub.questions.length) {
+                resIcon.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-6 shadow-md bg-emerald-100 text-emerald-600";
+                resIcon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+                resMsg.innerText = "ยอดเยี่ยมมาก! คุณทำคะแนนเต็ม สุดยอดจริงๆ ครับ 🌟";
+            } else if (score >= sub.questions.length / 2) {
+                resIcon.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-6 shadow-md bg-indigo-100 text-indigo-600";
+                resIcon.innerHTML = '<i class="fa-solid fa-award"></i>';
+                resMsg.innerText = "เก่งมากครับ มีความเข้าใจในบทเรียนนี้ดีเยี่ยม!";
+            } else {
+                resIcon.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-6 shadow-md bg-amber-100 text-amber-600";
+                resIcon.innerHTML = '<i class="fa-solid fa-book-open-reader"></i>';
+                resMsg.innerText = "พยายามได้ดีครับ ลองทบทวนเนื้อหาเพิ่มเติมแล้วทำใหม่อีกรอบนะ!";
+            }
+
+            switchScreen(screenResult);
+        }
+
+        function reviewAnswers() {
+            const sub = subjectsData[activeSubjectId];
+            const savedScoreData = scores[activeSubjectId];
+            const container = document.getElementById('review-list-container');
+            container.innerHTML = "";
+
+            sub.questions.forEach((q, idx) => {
+                const userAns = savedScoreData.answers[idx];
+                const isCorrect = userAns === q.answer;
+
+                const card = document.createElement('div');
+                card.className = `p-4 sm:p-5 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'}`;
+
+                let optionsHtml = '';
+                q.options.forEach((opt, optIdx) => {
+                    let badgeClass = "text-slate-600";
+                    if (optIdx === q.answer) {
+                        badgeClass = "text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded";
+                    } else if (optIdx === userAns && !isCorrect) {
+                        badgeClass = "text-rose-700 line-through bg-rose-100 px-2 py-0.5 rounded";
+                    }
+                    optionsHtml += `<div class="text-sm py-1 flex items-center space-x-2"><span class="text-xs text-slate-400 font-semibold">${String.fromCharCode(65 + optIdx)}.</span><span class="${badgeClass}">${opt}</span></div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-2">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
+                            ข้อที่ ${idx + 1} (${isCorrect ? 'ถูกต้อง' : 'ไม่ถูกต้อง'})
+                        </span>
+                    </div>
+                    <p class="font-semibold text-slate-800 text-sm sm:text-base mb-3">${q.q}</p>
+                    <div class="space-y-1 mb-3 bg-white/60 p-3 rounded-xl border border-slate-100">
+                        ${optionsHtml}
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-100">
+                        <span class="font-semibold text-indigo-600"><i class="fa-solid fa-circle-info mr-1"></i>คำอธิบาย:</span> ${q.explanation}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            switchScreen(screenReview);
+        }
+
+        function backToResult() {
+            switchScreen(screenResult);
+        }
+
+        function backToDashboard() {
+            activeSubjectId = null;
+            switchScreen(screenDashboard);
+            renderDashboard();
+        }
+
+        function confirmExitQuiz() {
+            // Simple confirmation flow without standard confirm()
+            if (confirm("คุณต้องการออกจากแบบทดสอบนี้หรือไม่? คะแนนจะไม่ถูกบันทึก")) {
+                activeSubjectId = null;
+                switchScreen(screenDashboard);
+                renderDashboard();
+            }
+        }
+    </script>
+</body>
+</html>
